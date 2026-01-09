@@ -1,19 +1,14 @@
 package com.movix.movix.entity;
 
-import java.time.LocalDateTime;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -26,8 +21,9 @@ public class Entrega {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "O status não pode estar em branco")
-    private String status;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private StatusEntrega status = StatusEntrega.CRIADO;
 
     @NotNull(message = "A entrega deve estar associada a um pedido")
     @ManyToOne
@@ -35,5 +31,14 @@ public class Entrega {
     private Pedido pedido;
 
     private LocalDateTime dataCriacao = LocalDateTime.now();
+
+    @NotBlank(message = "O motorista não pode estar em branco")
+    private String motorista;
+
+    @NotBlank(message = "A placa do veículo não pode estar em branco")
+    private String veiculoPlaca;
+
+    @NotNull(message = "A data prevista não pode ser nula")
+    private LocalDate dataPrevista;
 
 }

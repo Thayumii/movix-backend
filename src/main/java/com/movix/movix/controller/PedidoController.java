@@ -1,30 +1,18 @@
 package com.movix.movix.controller;
 
+import com.movix.movix.entity.Pedido;
+import com.movix.movix.service.PedidoService;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.movix.movix.entity.Pedido;
-import com.movix.movix.service.PedidoService;
-
-import jakarta.validation.Valid;
-
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/pedidos")
 public class PedidoController {
 
-    @Autowired
     private final PedidoService service;
 
     public PedidoController(PedidoService service) {
@@ -40,13 +28,20 @@ public class PedidoController {
     public Pedido salvar(@RequestBody @Valid Pedido pedido) {
         return service.salvar(pedido);
     }
+
     @GetMapping("/{id}")
-    public Optional<Pedido>buscarPorId(@PathVariable Long id) {
+    public Optional<Pedido> buscarPorId(@PathVariable Long id) {
         return service.buscarPorId(id);
     }
+
     @PutMapping("/{id}")
     public Pedido atualizar(@PathVariable @Valid Long id, @RequestBody Pedido pedido) {
         return service.atualizar(id, pedido);
+    }
+
+    @GetMapping("/rastreio/{codigo}")
+    public Pedido rastrear(@PathVariable String codigo) {
+        return service.buscarPorCodigoRastreio(codigo);
     }
 
     @DeleteMapping("/{id}")

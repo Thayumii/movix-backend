@@ -30,7 +30,14 @@ public class ClienteService {
             cliente.setNome(clienteAtualizado.getNome());
             cliente.setEmail(clienteAtualizado.getEmail());
             cliente.setTelefone(clienteAtualizado.getTelefone());
-            cliente.setEndereco(clienteAtualizado.getEndereco());
+            cliente.setCep(clienteAtualizado.getCep());
+            cliente.setLogradouro(clienteAtualizado.getLogradouro());
+            cliente.setNumero(clienteAtualizado.getNumero());
+            cliente.setComplemento(clienteAtualizado.getComplemento());
+            cliente.setPontoReferencia(clienteAtualizado.getPontoReferencia());
+            cliente.setBairro(clienteAtualizado.getBairro());
+            cliente.setCidade(clienteAtualizado.getCidade());
+            cliente.setEstado(clienteAtualizado.getEstado());
             return clienteRepository.save(cliente);
         }).orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
     }

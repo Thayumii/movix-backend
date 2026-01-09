@@ -24,7 +24,27 @@ public class Cliente {
     @Email(message = "Formato de e-mail inválido")
     private String email;
 
-    @NotBlank(message = "O endereço não pode estar em branco")
-    private String endereco;
+    @NotBlank(message = "O CEP não pode estar em branco")
+    private String cep;
+
+    @NotBlank(message = "O logradouro não pode estar em branco")
+    private String logradouro;
+
+    private String numero;
+
+    @NotBlank(message = "O complemento não pode estar em branco")
+    private String complemento;
+
+    @NotBlank(message = "O ponto de referência não pode estar em branco")
+    private String pontoReferencia;
+
+    @NotBlank(message = "O bairro não pode estar em branco")
+    private String bairro;
+
+    @NotBlank(message = "A cidade não pode estar em branco")
+    private String cidade;
+
+    @NotBlank(message = "O estado não pode estar em branco")
+    private String estado;
 
 }

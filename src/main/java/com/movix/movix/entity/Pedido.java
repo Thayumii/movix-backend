@@ -19,6 +19,13 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
+    private String codigoRastreio;
+
+    @NotBlank(message = "A descrição não pode estar em branco")
+    @Column(length = 500)
+    private String descricao;
+
     @NotBlank(message = "A origem não pode estar em branco")
     private String origem;
 
