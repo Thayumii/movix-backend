@@ -36,8 +36,8 @@ public class Pedido {
     @Positive(message = "O peso deve ser maior que zero")
     private Double peso;
     private BigDecimal valorFrete;
-    
-    private LocalDate dataCriacao = LocalDate.now();
+
+    private LocalDate criadoEm = LocalDate.now();
 
     @ManyToOne
     private Cliente cliente;

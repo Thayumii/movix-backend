@@ -30,7 +30,7 @@ public class Entrega {
     @JoinColumn(name = "pedido_id")
     private Pedido pedido;
 
-    private LocalDateTime dataCriacao = LocalDateTime.now();
+    private LocalDateTime criadoEm = LocalDateTime.now();
 
     @NotBlank(message = "O motorista não pode estar em branco")
     private String motorista;

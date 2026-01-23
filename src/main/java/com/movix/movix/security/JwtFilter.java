@@ -23,6 +23,13 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.startsWith("/swagger-ui")
+                || path.startsWith("/api-docs")
+                || path.equals("/swagger-ui.html");
+    }
 
     @Override
     protected void doFilterInternal(
@@ -55,7 +62,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.clearContext();
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json");
-                response.getWriter().write("{\"message\": \"Token invalido ou expirado: " + e);
+                response.getWriter().write("{\"message\": \"Token invalido ou expirado: " + e.getMessage() + "\"}");
                 return;
             }
 
