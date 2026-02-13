@@ -32,13 +32,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest data) {
-        if (repository.findByUsername(data.username()).isPresent()) {
+        if (repository.findByEmail(data.email()).isPresent()) {
             return ResponseEntity.badRequest().body("Erro: Usuário já existe!");
         }
         String encryptedPassword = passwordEncoder.encode(data.password());
 
         Usuario newUser = new Usuario();
-        newUser.setUsername(data.username());
+        newUser.setEmail(data.email());
         newUser.setSenha(encryptedPassword);
         newUser.setRole(data.role());
 
@@ -53,7 +53,7 @@ public class AuthController {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginRequest.getUsername(),
+                            loginRequest.getEmail(),
                             loginRequest.getPassword()
                     )
             );

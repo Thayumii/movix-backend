@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -40,5 +42,20 @@ public class Entrega {
 
     @NotNull(message = "A data prevista não pode ser nula")
     private LocalDate dataPrevista;
+
+    @OneToMany(mappedBy = "entrega", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("dataHora DESC")
+    private List<Movimentacao> historico = new ArrayList<>();
+
+    public void adicionarMovimentacao(String descricao, String origem, String destino) {
+        Movimentacao mov = new Movimentacao();
+        mov.setEntrega(this);
+        mov.setStatusAtual(this.status);
+        mov.setDescricao(descricao);
+        mov.setLocalizacaoOrigem(origem);
+        mov.setLocalizacaoDestino(destino);
+        mov.setDataHora(LocalDateTime.now());
+        this.historico.add(mov);
+    }
 
 }

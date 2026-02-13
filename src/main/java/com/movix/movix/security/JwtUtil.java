@@ -23,11 +23,11 @@ public class JwtUtil {
         this.SECRET_KEY = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String gerarToken(String username) {
-        return Jwts.builder().subject(username).issuedAt(new Date()).expiration(new Date(System.currentTimeMillis() + EXPIRATION)).signWith(SECRET_KEY).compact();
+    public String gerarToken(String email) {
+        return Jwts.builder().subject(email).issuedAt(new Date()).expiration(new Date(System.currentTimeMillis() + EXPIRATION)).signWith(SECRET_KEY).compact();
     }
 
-    public String getUsername(String token) {
+    public String getemail(String token) {
         try {
             return Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token).getPayload().getSubject();
         } catch (JwtException e) {

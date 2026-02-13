@@ -1,10 +1,6 @@
 package com.movix.movix.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @lombok.Data
@@ -15,14 +11,15 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
+    private String email;
     private String senha;
     private String role;
 
-    public Usuario() {}
+    public Usuario() {
+    }
 
-    public Usuario(String username, String senha, String role) {
-        this.username = username;
+    public Usuario(String email, String senha, String role) {
+        this.email = email;
         this.senha = senha;
         this.role = role;
     }

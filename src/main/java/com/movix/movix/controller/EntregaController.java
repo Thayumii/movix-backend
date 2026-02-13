@@ -42,7 +42,12 @@ public class EntregaController {
 
     @PatchMapping("/{id}/status")
     public Entrega atualizarStatus(@PathVariable Long id, @RequestBody AtualizarStatusRequest request) {
-        return entregaService.atualizarStatus(id, request.getStatus());
+        return entregaService.atualizarStatus(
+                id,
+                request.getStatus(),
+                request.getOrigem(),
+                request.getDestino()
+        );
     }
 
     @DeleteMapping("/{id}")

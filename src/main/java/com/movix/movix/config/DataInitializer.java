@@ -1,12 +1,11 @@
 package com.movix.movix.config;
 
+import com.movix.movix.entity.Usuario;
+import com.movix.movix.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import com.movix.movix.entity.Usuario;
-import com.movix.movix.repository.UsuarioRepository;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,20 +19,20 @@ public class DataInitializer implements CommandLineRunner {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public void run(String ... args) throws Exception {
-        String usernameTeste = "usuario_teste";
+    public void run(String... args) throws Exception {
+        String emailTeste = "movix@teste";
 
-        if (!usuarioRepository.existsByUsername(usernameTeste)) {
-            String senhaPura = "senha123";
+        if (!usuarioRepository.existsByEmail(emailTeste)) {
+            String senhaPura = "movix123";
 
             String senhaCriptografada = passwordEncoder.encode(senhaPura);
 
             Usuario novUsuario = new Usuario();
-            novUsuario.setUsername(usernameTeste);
+            novUsuario.setEmail(emailTeste);
             novUsuario.setPassword(senhaCriptografada);
 
             usuarioRepository.save(novUsuario);
-            
+
         }
     }
 
