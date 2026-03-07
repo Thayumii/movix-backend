@@ -1,15 +1,17 @@
 services:
   db:
-    image: mysql:8.0
+    image: postgres:16
     container_name: movix-db
     restart: always
     environment:
-      MYSQL_DATABASE: movix
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: movix
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
     ports:
-      - "3307:3306"
+      - "5432:5432"
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD}" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
       timeout: 20s
       retries: 10
@@ -23,7 +25,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      - DB_URL=jdbc:mysql://db:3306/movix?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
-      - DB_USERNAME=root
+      - DB_URL=jdbc:postgresql://db:5432/movix
+      - DB_USERNAME=postgres
       - DB_PASSWORD=${DB_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
