@@ -48,10 +48,7 @@ public class EntregaService {
                 entrega.setStatus(entregaAtualizada.getStatus());
                 entrega.adicionarMovimentacao("Atualicação manual de dados e status", "N/A", "N/A");
             }
-
-
-            entrega.setMotorista(entregaAtualizada.getMotorista());
-            entrega.setVeiculoPlaca(entregaAtualizada.getVeiculoPlaca());
+            
             entrega.setDataPrevista(entregaAtualizada.getDataPrevista());
 
             return entregaRepository.save(entrega);

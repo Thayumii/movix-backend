@@ -1,10 +1,17 @@
 package com.movix.movix.service;
 
+import com.movix.movix.entity.Entrega;
+import com.movix.movix.entity.Motorista;
 import com.movix.movix.entity.Pedido;
+import com.movix.movix.entity.StatusEntrega;
+import com.movix.movix.repository.EntregaRepository;
+import com.movix.movix.repository.MotoristaRepository;
 import com.movix.movix.repository.PedidoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,9 +20,13 @@ import java.util.UUID;
 public class PedidoService {
 
     private final PedidoRepository pedidoRepository;
+    private final MotoristaRepository motoristaRepository;
+    private final EntregaRepository entregaRepository;
 
-    public PedidoService(PedidoRepository pedidoRepository) {
+    public PedidoService(PedidoRepository pedidoRepository, MotoristaRepository motoristaRepository, EntregaRepository entregaRepository) {
         this.pedidoRepository = pedidoRepository;
+        this.motoristaRepository = motoristaRepository;
+        this.entregaRepository = entregaRepository;
     }
 
     public List<Pedido> listarTodos() {
@@ -26,14 +37,47 @@ public class PedidoService {
         return pedidoRepository.findById(id);
     }
 
+    @Transactional //se der erro na entrega o pedido não vai salvar sozinho
     public Pedido salvar(Pedido pedido) {
 
-        String codigo = "MVX-" + UUID.randomUUID().toString().substring(0, 9).toUpperCase();
-        pedido.setCodigoRastreio(codigo);
+        pedido.setCodigoRastreio(gerarCodigoRastreioUnico());
 
         calcularFrete(pedido);
-        return pedidoRepository.save(pedido);
+
+        Pedido pedidoSalvo = pedidoRepository.save(pedido); //salva o pedido primeiro.
+
+        Optional<Motorista> motoristaOpt = motoristaRepository.findFirstByDisponivelTrue(); // tenta buscar um motorista.
+
+        Entrega entrega = new Entrega();
+        entrega.setPedido(pedidoSalvo);
+        entrega.setCriadoEm(LocalDateTime.now());
+        entrega.setDataPrevista(LocalDateTime.now().plusDays(5));
+
+        if (motoristaOpt.isPresent()) {
+            Motorista motorista = motoristaOpt.get();
+            entrega.setMotorista(motorista);
+            entrega.setStatus(StatusEntrega.CRIADO);
+
+            motorista.setDisponivel(false);
+            motoristaRepository.save(motorista);
+        } else {
+            entrega.setStatus(StatusEntrega.SEM_MOTORISTA);
+        }
+        entregaRepository.save(entrega);
+
+        return pedidoSalvo;
     }
+
+    private String gerarCodigoRastreioUnico() {
+        String codigo;
+        boolean jaExiste;
+        do {
+            codigo = "MVX" + UUID.randomUUID().toString().replace("-", "").substring(0, 9).toUpperCase();
+            jaExiste = pedidoRepository.findByCodigoRastreio(codigo).isPresent();
+        } while (jaExiste);
+        return codigo;
+    }
+
 
     public Pedido atualizar(Long id, Pedido pedidoAtualizado) {
         return pedidoRepository.findById(id).map(pedido -> {

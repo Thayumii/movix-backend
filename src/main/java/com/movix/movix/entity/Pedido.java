@@ -8,10 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @lombok.Data
+@Table(name = "pedidos")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pedido {
@@ -37,9 +38,10 @@ public class Pedido {
     private Double peso;
     private BigDecimal valorFrete;
 
-    private LocalDate criadoEm = LocalDate.now();
+    private LocalDateTime criadoEm = LocalDateTime.now();
 
     @ManyToOne
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
 }

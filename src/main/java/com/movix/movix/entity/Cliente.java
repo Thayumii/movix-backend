@@ -3,11 +3,13 @@ package com.movix.movix.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "clientes")
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +18,9 @@ public class Cliente {
     @NotBlank(message = "O nome não pode estar em branco")
     @Size(min = 3, message = "O nome deve ter pelo menos 3 caracteres")
     private String nome;
+
+    @NotNull(message = "O documento não pode estar vazio")
+    private String documento;
 
     @NotBlank(message = "O telefone não pode estar em branco")
     private String telefone;
