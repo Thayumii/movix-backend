@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/location")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173")
 public class LocationController {
 
     private final LocationRepository repository;
