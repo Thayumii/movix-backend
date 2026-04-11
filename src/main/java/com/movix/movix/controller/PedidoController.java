@@ -39,11 +39,6 @@ public class PedidoController {
         return service.atualizar(id, pedido);
     }
 
-    @GetMapping("/rastreio/{codigo}")
-    public Pedido rastrear(@PathVariable String codigo) {
-        return service.buscarPorCodigoRastreio(codigo);
-    }
-
     @DeleteMapping("/{id}")
     public void deletar(@PathVariable Long id) {
         service.deletar(id);

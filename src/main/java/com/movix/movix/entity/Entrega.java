@@ -32,6 +32,9 @@ public class Entrega {
 
     private LocalDateTime criadoEm = LocalDateTime.now();
 
+    @Column(unique = true, nullable = false)
+    private String codigoRastreio;
+
     @ManyToOne
     @JoinColumn(name = "motorista_id")
     private Motorista motorista;

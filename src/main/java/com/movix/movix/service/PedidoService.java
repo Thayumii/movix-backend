@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class PedidoService {
@@ -39,8 +38,6 @@ public class PedidoService {
 
     @Transactional //se der erro na entrega o pedido não vai salvar sozinho
     public Pedido salvar(Pedido pedido) {
-
-        pedido.setCodigoRastreio(gerarCodigoRastreioUnico());
 
         calcularFrete(pedido);
 
@@ -68,17 +65,6 @@ public class PedidoService {
         return pedidoSalvo;
     }
 
-    private String gerarCodigoRastreioUnico() {
-        String codigo;
-        boolean jaExiste;
-        do {
-            codigo = "MVX" + UUID.randomUUID().toString().replace("-", "").substring(0, 9).toUpperCase();
-            jaExiste = pedidoRepository.findByCodigoRastreio(codigo).isPresent();
-        } while (jaExiste);
-        return codigo;
-    }
-
-
     public Pedido atualizar(Long id, Pedido pedidoAtualizado) {
         return pedidoRepository.findById(id).map(pedido -> {
             pedido.setPeso(pedidoAtualizado.getPeso());
@@ -92,10 +78,6 @@ public class PedidoService {
 
     public void deletar(Long id) {
         pedidoRepository.deleteById(id);
-    }
-
-    public Pedido buscarPorCodigoRastreio(String codigo) {
-        return pedidoRepository.findByCodigoRastreio(codigo).orElseThrow(() -> new RuntimeException("Código de rastreio não encontrado."));
     }
 
     private void calcularFrete(Pedido pedido) {

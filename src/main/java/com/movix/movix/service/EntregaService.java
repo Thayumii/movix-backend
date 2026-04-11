@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class EntregaService {
@@ -28,8 +29,23 @@ public class EntregaService {
 
     @Transactional
     public Entrega salvar(Entrega entrega) {
+        entrega.setCodigoRastreio(gerarCodigoRastreioUnico());
         entrega.adicionarMovimentacao("Entrega registrada no sistema Movix.", "Origem", "Aguardando despacho");
         return entregaRepository.save(entrega);
+    }
+
+    private String gerarCodigoRastreioUnico() {
+        String codigo;
+        boolean jaExiste;
+        do {
+            codigo = "MVX" + UUID.randomUUID().toString().replace("-", "").substring(0, 9).toUpperCase();
+            jaExiste = entregaRepository.findByCodigoRastreio(codigo).isPresent();
+        } while (jaExiste);
+        return codigo;
+    }
+
+    public Entrega buscarPorCodigoRastreio(String codigo) {
+        return entregaRepository.findByCodigoRastreio(codigo).orElseThrow(() -> new RuntimeException("Código de rastreio não encontrado."));
     }
 
     @Transactional
@@ -48,7 +64,7 @@ public class EntregaService {
                 entrega.setStatus(entregaAtualizada.getStatus());
                 entrega.adicionarMovimentacao("Atualicação manual de dados e status", "N/A", "N/A");
             }
-            
+
             entrega.setDataPrevista(entregaAtualizada.getDataPrevista());
 
             return entregaRepository.save(entrega);

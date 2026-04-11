@@ -30,6 +30,11 @@ public class EntregaController {
         return entregaService.buscarPorId(id);
     }
 
+    @GetMapping("/rastreio/{codigo}")
+    public Entrega rastrear(@PathVariable String codigo) {
+        return entregaService.buscarPorCodigoRastreio(codigo);
+    }
+
     @PostMapping
     public Entrega salvar(@RequestBody @Valid Entrega entrega) {
         return entregaService.salvar(entrega);
