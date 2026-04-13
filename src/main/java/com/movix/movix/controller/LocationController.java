@@ -2,6 +2,7 @@ package com.movix.movix.controller;
 
 import com.movix.movix.entity.Entrega;
 import com.movix.movix.entity.Location;
+import com.movix.movix.entity.StatusEntrega;
 import com.movix.movix.repository.LocationRepository;
 import com.movix.movix.service.EntregaService;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,11 @@ public class LocationController {
     @PostMapping("/{id}/localizacao")
     public ResponseEntity<?> updateLocation(@PathVariable Long id, @RequestBody Location request) {
         Entrega entrega = entregaService.buscarPorId(id).orElseThrow(() -> new RuntimeException("Entrega não encontrada."));
+
+        if (entrega.getStatus() == StatusEntrega.EM_TRANSPORTE) {
+            entrega.setStatus(StatusEntrega.SAIU_PARA_ENTREGA);
+            entregaService.salvar(entrega);
+        }
 
         Location location = new Location();
         location.setLatitude(request.getLatitude());
