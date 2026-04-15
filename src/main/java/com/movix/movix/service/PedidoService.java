@@ -21,11 +21,18 @@ public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final MotoristaRepository motoristaRepository;
     private final EntregaRepository entregaRepository;
+    private final GeocodingService geocodingService;
 
-    public PedidoService(PedidoRepository pedidoRepository, MotoristaRepository motoristaRepository, EntregaRepository entregaRepository) {
+    public PedidoService(PedidoRepository pedidoRepository, MotoristaRepository motoristaRepository, EntregaRepository entregaRepository, GeocodingService geocodingService) {
         this.pedidoRepository = pedidoRepository;
         this.motoristaRepository = motoristaRepository;
         this.entregaRepository = entregaRepository;
+        this.geocodingService = geocodingService;
+    }
+
+    public double[] calcularCoordenada(Pedido pedido) {
+        double[] coordenadas = geocodingService.buscarCoordenadas(pedido.getDestino());
+        return coordenadas;
     }
 
     public List<Pedido> listarTodos() {

@@ -43,6 +43,9 @@ public class Entrega {
     @NotNull(message = "A data prevista não pode ser nula")
     private LocalDateTime dataPrevista;
 
+    private Double latitudeDestino;
+    private Double longitudeDestino;
+
     @OneToMany(mappedBy = "entrega", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("dataHora DESC")
     private List<Movimentacao> historico = new ArrayList<>();

@@ -1,6 +1,8 @@
 package com.movix.movix.service;
 
+import com.movix.movix.DTO.EstimativaEntrega;
 import com.movix.movix.entity.Entrega;
+import com.movix.movix.entity.Location;
 import com.movix.movix.entity.StatusEntrega;
 import com.movix.movix.repository.EntregaRepository;
 import jakarta.transaction.Transactional;
@@ -14,9 +16,17 @@ import java.util.UUID;
 public class EntregaService {
 
     private final EntregaRepository entregaRepository;
+    private final RotaService rotaService;
+    private final LocationService locationService;
+    private final GeocodingService geocodingService;
+    private final PedidoService pedidoService;
 
-    public EntregaService(EntregaRepository entregaRepository) {
+    public EntregaService(EntregaRepository entregaRepository, RotaService rotaService, LocationService locationService, GeocodingService geocodingService, PedidoService pedidoService) {
         this.entregaRepository = entregaRepository;
+        this.rotaService = rotaService;
+        this.locationService = locationService;
+        this.geocodingService = geocodingService;
+        this.pedidoService = pedidoService;
     }
 
     public List<Entrega> listarTodas() {
@@ -31,6 +41,10 @@ public class EntregaService {
     public Entrega salvar(Entrega entrega) {
         entrega.setCodigoRastreio(gerarCodigoRastreioUnico());
         entrega.adicionarMovimentacao("Entrega registrada no sistema Movix.", "Origem", "Aguardando despacho");
+        double[] coordenadas = pedidoService.calcularCoordenada(entrega.getPedido());
+        entrega.setLatitudeDestino(coordenadas[0]);
+        entrega.setLongitudeDestino(coordenadas[1]);
+
         return entregaRepository.save(entrega);
     }
 
@@ -69,11 +83,22 @@ public class EntregaService {
 
             return entregaRepository.save(entrega);
         }).orElseThrow(() -> new RuntimeException("Entrega não encontrada"));
+    }
 
+    public EstimativaEntrega calcularTempoEntrega(Long entregaId) {
+        Location origem = locationService.buscarUltimaPorEntrega(entregaId);
+
+        Entrega entrega = buscarPorId(entregaId).orElseThrow(() -> new RuntimeException("Entrega não encontrada"));
+
+        return rotaService.calcularRota(
+                origem.getLatitude(),
+                origem.getLongitude(),
+                entrega.getLatitudeDestino(),
+                entrega.getLongitudeDestino()
+        );
     }
 
     public void deletar(Long id) {
         entregaRepository.deleteById(id);
     }
-
 }

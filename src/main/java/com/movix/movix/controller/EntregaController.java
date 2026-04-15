@@ -1,6 +1,7 @@
 package com.movix.movix.controller;
 
 import com.movix.movix.DTO.AtualizarStatusRequest;
+import com.movix.movix.DTO.EstimativaEntrega;
 import com.movix.movix.entity.Entrega;
 import com.movix.movix.service.EntregaService;
 import jakarta.validation.Valid;
@@ -28,6 +29,11 @@ public class EntregaController {
     @GetMapping("/{id}")
     public Optional<Entrega> buscarPorId(@PathVariable Long id) {
         return entregaService.buscarPorId(id);
+    }
+
+    @GetMapping("/{id}/estimativa")
+    public EstimativaEntrega calcularEta(@PathVariable Long id) {
+        return entregaService.calcularTempoEntrega(id);
     }
 
     @GetMapping("/rastreio/{codigo}")
