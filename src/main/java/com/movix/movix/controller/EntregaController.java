@@ -31,6 +31,11 @@ public class EntregaController {
         return entregaService.buscarPorId(id);
     }
 
+    @GetMapping("/motorista/{motoristaId}/pendentes")
+    public List<Entrega> buscarPendentesPorMotorista(@PathVariable Long motoristaId) {
+        return entregaService.buscarPendentesPorMotorista(motoristaId);
+    }
+
     @GetMapping("/{id}/estimativa")
     public EstimativaEntrega calcularEta(@PathVariable Long id) {
         return entregaService.calcularTempoEntrega(id);

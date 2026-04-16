@@ -98,6 +98,10 @@ public class EntregaService {
         );
     }
 
+    public List<Entrega> buscarPendentesPorMotorista(Long motoristaId) {
+        return entregaRepository.findByMotoristaIdAndStatusNot(motoristaId, StatusEntrega.ENTREGUE);
+    }
+
     public void deletar(Long id) {
         entregaRepository.deleteById(id);
     }
